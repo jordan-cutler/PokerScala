@@ -1,16 +1,23 @@
+import scala.collection.mutable
+
 object Main {
   def main(args: Array[String]): Unit = {
     val deck = new Deck()
-//    deck.shuffle()
+    deck.shuffle()
 
-    val hand = new Hand()
-    hand.addCard(new Card(12, 2))
-    hand.addCard(new Card(11, 2))
-    hand.addCard(new Card(10, 2))
-    hand.addCard(new Card(9, 2))
-    hand.addCard(new Card(8, 2))
+    val buffer = new mutable.ArrayBuffer[String]()
+    for (i <- 1 to 100) {
+      val hand = new Hand()
+      hand.addCard(deck.dealCard())
+      hand.addCard(deck.dealCard())
+      hand.addCard(deck.dealCard())
+      hand.addCard(deck.dealCard())
+      hand.addCard(deck.dealCard())
+      deck.shuffle()
+      buffer.append(hand.getHandName)
+    }
 
-    println(hand.isRoyalFlush)
-    println(deck)
+    buffer.foreach(println)
+
   }
 }

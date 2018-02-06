@@ -59,23 +59,32 @@ class Hand {
     (getCurrentHand.maxBy(_.rank).rank - getCurrentHand.minBy(_.rank).rank == 4) && handSize == 5 && allSuitsSame
   }
 
+  def getHandName: String = {
+    if (isRoyalFlush) "ROYALFLUSH"
+    else if (isStraightFlush) "STRAIGHTFLUSH"
+    else if (isFullHouse) "FULLHOUSE"
+    else if (isFlush) "FLUSH"
+    else if (isStraight) "ISSTRAIGHT"
+    else if (isFourOfAKind) "ISFOUROFAKIND"
+    else if (isThreeOfAKind) "ISTHREEOFAKIND"
+    else if (isTwoPair) "ISTWOPAIR"
+    else if (isOnePair) "ISONEPAIR"
+    else "NOTHING"
+  }
+
   override def toString: String = {
     getCurrentHand.mkString(" ")
   }
 
   private def cardsSequential: Boolean = {
-    getCurrentHand.reduce((left, right) => {
-      if (left.rank != right.rank - 1) return false
-      right
-    })
-    true
+    getCurrentHand.maxBy(_.rank).rank - getCurrentHand.minBy(_.rank).rank == 4 && handSize == 5
   }
 
   private def setsOfCardsWithNSameRank(n: Int): Int = {
     getCurrentHand.groupBy(_.rank).count { case (rank, cardsWithGivenRank) => cardsWithGivenRank.length == n}
   }
 
-  private def allSuitsSame: Boolean = {
+  def allSuitsSame: Boolean = {
     getCurrentHand.map(_.getSuitName).toSet.size == 1
   }
 
