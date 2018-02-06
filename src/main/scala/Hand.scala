@@ -48,15 +48,11 @@ class Hand {
   }
 
   def isStraight: Boolean = {
-    getCurrentHand.reduce((left, right) => {
-      if (left.rank != right.rank - 1) return false
-      right
-    })
-    !isStraightFlush
+    cardsSequential && handSize == 5 && !isStraightFlush
   }
 
   def isStraightFlush: Boolean = {
-    isStraight && isFlush
+    cardsSequential && allSuitsSame && handSize == 5
   }
 
   def isRoyalFlush: Boolean = {
@@ -65,6 +61,14 @@ class Hand {
 
   override def toString: String = {
     getCurrentHand.mkString(" ")
+  }
+
+  private def cardsSequential: Boolean = {
+    getCurrentHand.reduce((left, right) => {
+      if (left.rank != right.rank - 1) return false
+      right
+    })
+    true
   }
 
   private def setsOfCardsWithNSameRank(n: Int): Int = {
