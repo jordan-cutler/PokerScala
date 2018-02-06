@@ -48,7 +48,7 @@ class Hand(hand: Array[Card]) {
   def isRoyalFlush: Boolean = {
     val maxCard = hand.maxBy(_.face.value)
     val minCard = hand.minBy(_.face.value)
-    maxCard.face == Ace && minCard.face == Ten && allSuitsSame
+    maxCard.face == Ace && minCard.face == Ten && allSuitsSame && isDistinctFaces
   }
 
   def getHandName: String = {
@@ -68,8 +68,12 @@ class Hand(hand: Array[Card]) {
     hand.mkString(" ")
   }
 
+  private def isDistinctFaces: Boolean = {
+    hand.map(_.face).distinct.length == 5
+  }
+
   private def cardsSequential: Boolean = {
-    hand.maxBy(_.face.value).face.value - hand.minBy(_.face.value).face.value == 4
+    hand.maxBy(_.face.value).face.value - hand.minBy(_.face.value).face.value == 4 && isDistinctFaces
   }
 
   private def setsOfCardsWithNSameRank(n: Int): Int = {
