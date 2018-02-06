@@ -1,4 +1,4 @@
-trait CardFace {
+sealed trait CardFace {
   val name: String
   val value: Int
 }
