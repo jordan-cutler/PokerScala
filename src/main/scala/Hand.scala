@@ -1,16 +1,6 @@
-class Hand {
-  val hand: Array[Card] = Array.fill(5) {
-    new Card(-1, -1)
-  }
-  private var handSize = 0
-
-  def addCard(card: Card): Boolean = {
-    if (handSize >= hand.length) return false
-    hand(handSize) = card
-    handSize = handSize + 1
-    hand.sortBy(_.rank)
-    true
-  }
+class Hand(hand: Array[Card]) {
+  
+  require(hand.length == 5)
 
   def lookup(n: Int): Card = {
     if (n < 0 || n > (hand.length - 1)) return null
@@ -44,19 +34,21 @@ class Hand {
   }
 
   def isFlush: Boolean = {
-    allSuitsSame && handSize == 5 && !isStraightFlush && !isRoyalFlush
+    allSuitsSame && !isStraightFlush && !isRoyalFlush
   }
 
   def isStraight: Boolean = {
-    cardsSequential && handSize == 5 && !isStraightFlush
+    cardsSequential && !isStraightFlush
   }
 
   def isStraightFlush: Boolean = {
-    cardsSequential && allSuitsSame && handSize == 5
+    cardsSequential && allSuitsSame
   }
 
   def isRoyalFlush: Boolean = {
-    (getCurrentHand.maxBy(_.rank).rank - getCurrentHand.minBy(_.rank).rank == 4) && handSize == 5 && allSuitsSame
+    val maxCard = hand.maxBy(_.face.value)
+    val minCard = hand.minBy(_.face.value)
+    maxCard.face == Ace && minCard.face == Ten && allSuitsSame
   }
 
   def getHandName: String = {
@@ -73,26 +65,19 @@ class Hand {
   }
 
   override def toString: String = {
-    getCurrentHand.mkString(" ")
+    hand.mkString(" ")
   }
 
   private def cardsSequential: Boolean = {
-    getCurrentHand.maxBy(_.rank).rank - getCurrentHand.minBy(_.rank).rank == 4 && handSize == 5
+    hand.maxBy(_.face.value).face.value - hand.minBy(_.face.value).face.value == 4
   }
 
   private def setsOfCardsWithNSameRank(n: Int): Int = {
-    getCurrentHand.groupBy(_.rank).count { case (rank, cardsWithGivenRank) => cardsWithGivenRank.length == n}
+    hand.groupBy(_.face).count { case (rank, cardsWithGivenRank) => cardsWithGivenRank.length == n}
   }
 
   def allSuitsSame: Boolean = {
-    getCurrentHand.map(_.getSuitName).toSet.size == 1
+    hand.map(_.getSuitName).toSet.size == 1
   }
-
-  private def getCurrentHand: Seq[Card] = {
-    hand.toSeq.slice(0, handSize)
-  }
-
-  private def cardsNotSameReference(x: Card, y: Card): Boolean = {
-    !(x eq y)
-  }
+  
 }

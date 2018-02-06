@@ -7,12 +7,7 @@ object Main {
 
     val buffer = new mutable.ArrayBuffer[String]()
     for (i <- 1 to 100) {
-      val hand = new Hand()
-      hand.addCard(deck.dealCard())
-      hand.addCard(deck.dealCard())
-      hand.addCard(deck.dealCard())
-      hand.addCard(deck.dealCard())
-      hand.addCard(deck.dealCard())
+      val hand = deck.dealHand()
       deck.shuffle()
       buffer.append(hand.getHandName)
     }
